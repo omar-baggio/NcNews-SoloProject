@@ -1,3 +1,3 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+A developer must have .env file in order to connect to my database locally.
