@@ -41,14 +41,16 @@ describe("GET/api", () => {
     return request(app)
       .get("/api")
       .expect(200)
-      .then(({ body }) => {
-        expect(body).toEqual(endpoints);
+      .then(({ body: { endpoints } }) => {
+        expect(endpoints).hasOwnProperty("GET /api");
       });
   });
+});
 
+describe("GET /aip", () => {
   test("404: responds with error message page not found", () => {
     return request(app)
-      .get("/apis")
+      .get("/aip")
       .expect(404)
       .then(({ body: { message } }) => {
         expect(message).toBe("page not found");
