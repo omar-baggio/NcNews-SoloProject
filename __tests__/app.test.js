@@ -3,6 +3,7 @@ const request = require("supertest");
 const app = require("../app");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -31,6 +32,17 @@ describe("GET/api/topics", () => {
       .expect(404)
       .then(({ body: { message } }) => {
         expect(message).toBe("page not found");
+      });
+  });
+});
+
+describe("GET/api", () => {
+  test("status: 200, should respond with a json file describing each endpoint", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(endpoints);
       });
   });
 });
