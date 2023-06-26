@@ -45,4 +45,13 @@ describe("GET/api", () => {
         expect(body).toEqual(endpoints);
       });
   });
+
+  test("404: responds with error message page not found", () => {
+    return request(app)
+      .get("/apis")
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("page not found");
+      });
+  });
 });
