@@ -8,7 +8,7 @@ const endpointsFile = require("../endpoints.json");
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe("GET/api/topics", () => {
+describe("GET /api/topics", () => {
   test("status: 200, should respond with an array of topic objects with properties slug and description", () => {
     return request(app)
       .get("/api/topics")
@@ -36,7 +36,7 @@ describe("GET/api/topics", () => {
   });
 });
 
-describe("GET/api", () => {
+describe("GET /api", () => {
   test("status: 200, should respond with a json file describing each endpoint", () => {
     return request(app)
       .get("/api")
@@ -58,16 +58,17 @@ describe("GET /aip", () => {
   });
 });
 
-describe("GET/api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("status: 200, should responds with an article object, containing the properties author, title, article_id, body, topic, created_at, votes and article_img_url ", () => {
+    const article_id = 3;
     return request(app)
-      .get("/api/articles/3")
+      .get(`/api/articles/${article_id}`)
       .expect(200)
       .then(({ body: { article } }) => {
         const created_at = new Date(1604394720000).toISOString();
         expect(article).toEqual(
           expect.objectContaining({
-            article_id: 3,
+            article_id,
             title: "Eight pug gifs that remind me of mitch",
             topic: "mitch",
             author: "icellusedkars",
@@ -78,6 +79,28 @@ describe("GET/api/articles/:article_id", () => {
             votes: 0,
           })
         );
+      });
+  });
+});
+
+describe("ERROR: GET /api/articles/:article_id", () => {
+  test("400: responds with an error message when passed a bad request", () => {
+    const article_id = "invalid_type";
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("input is not valid");
+      });
+  });
+
+  test("404: responds with an error message when passed a valid endpoint with correct data but does not exist", () => {
+    const article_id = 999;
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe(`article with id: ${article_id} does not exist`);
       });
   });
 });
