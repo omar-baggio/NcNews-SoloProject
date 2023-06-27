@@ -64,7 +64,6 @@ describe("GET/api/articles/:article_id", () => {
       .get("/api/articles/3")
       .expect(200)
       .then(({ body: { article } }) => {
-        console.log(article, "<---- article test");
         const created_at = new Date(1604394720000).toISOString();
         expect(article).toEqual(
           expect.objectContaining({
