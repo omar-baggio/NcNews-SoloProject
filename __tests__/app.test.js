@@ -57,3 +57,28 @@ describe("GET /aip", () => {
       });
   });
 });
+
+describe("GET/api/articles/:article_id", () => {
+  test("status: 200, should responds with an article object, containing the properties author, title, article_id, body, topic, created_at, votes and article_img_url ", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        console.log(article, "<---- article test");
+        const created_at = new Date(1604394720000).toISOString();
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "some gifs",
+            created_at,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            votes: 0,
+          })
+        );
+      });
+  });
+});
