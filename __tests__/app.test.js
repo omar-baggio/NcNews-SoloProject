@@ -4,6 +4,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
 const endpointsFile = require("../endpoints.json");
+require("jest-sorted");
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -101,6 +102,31 @@ describe("ERROR: GET /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body: { message } }) => {
         expect(message).toBe(`article with id: ${article_id} does not exist`);
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("status: 200, should responds with an article object, containing the properties author, title, article_id, body, topic, created_at, votes, article_img_url and comment_count", () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        expect(body).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        console.log(body);
+        body.forEach((article) => {
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("author", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+          expect(article).toHaveProperty("comment_count", expect.any(Number));
+        });
       });
   });
 });
