@@ -166,3 +166,17 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("Patch /api/articles/:article_id", () => {
+  test("201: should respond with the updated article", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .expect(201)
+      .send({
+        inc_votes: 10,
+      })
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(110);
+      });
+  });
+});
