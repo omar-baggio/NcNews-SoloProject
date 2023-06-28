@@ -127,3 +127,42 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("status: 200, should responds with array of comments for a given article", () => {
+    return request(app)
+      .get(`/api/articles/1/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Array);
+        body.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id", expect.any(Number));
+          expect(comment).toHaveProperty("votes", expect.any(Number));
+          expect(comment).toHaveProperty("created_at", expect.any(String));
+          expect(comment).toHaveProperty("author", expect.any(String));
+          expect(comment).toHaveProperty("body", expect.any(String));
+          expect(comment).toHaveProperty("article_id", expect.any(Number));
+        });
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: should add a new comment to the comments", () => {
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .expect(201)
+      .send({
+        username: "butter_bridge",
+        body: "This is awesome!",
+      })
+      .then(({ body: { comment } }) => {
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+        expect(comment).toHaveProperty("body", expect.any(String));
+        expect(comment).toHaveProperty("article_id", expect.any(Number));
+        expect(comment).toHaveProperty("author", expect.any(String));
+        expect(comment).toHaveProperty("votes", expect.any(Number));
+        expect(comment).toHaveProperty("created_at", expect.any(String));
+      });
+  });
+});

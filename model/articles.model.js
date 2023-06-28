@@ -33,3 +33,29 @@ exports.selectAllArticles = () => {
     return rows;
   });
 };
+
+exports.selectCommentsById = (id) => {
+  let sqlString = `
+    SELECT * FROM comments
+    WHERE comments.article_id = $1
+    ORDER BY created_at DESC;
+    `;
+  return db.query(sqlString, [id]).then(({ rows }) => {
+    return rows;
+  });
+};
+
+exports.addCommentsById = ({ username, body }, id) => {
+  let sqlString = `
+  INSERT INTO comments
+  (author, body, article_id)
+  VALUES ($1, $2, $3)
+  RETURNING *
+  `;
+
+  return db
+    .query(sqlString, [username, body, id])
+    .then(({ rows: [comment] }) => {
+      return comment;
+    });
+};
