@@ -180,3 +180,9 @@ describe("Patch /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("Delete /api/comments/:comment_id", () => {
+  test("204: should respond with the deleted comment", () => {
+    return request(app).delete(`/api/comments/2`).expect(204);
+  });
+});

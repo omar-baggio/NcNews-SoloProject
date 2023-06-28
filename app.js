@@ -9,6 +9,7 @@ const {
   postCommentsById,
   updateArticleById,
 } = require("./controller/articles.controller");
+const { deleteComment } = require("./controller/comments.controller");
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.get("/api/articles/:article_id/comments", getCommentsById);
 app.post("/api/articles/:article_id/comments", postCommentsById);
 
 app.patch("/api/articles/:article_id", updateArticleById);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("/*", (req, res, next) =>
   res.status(404).send({ message: "page not found" })
