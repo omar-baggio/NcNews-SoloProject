@@ -33,3 +33,14 @@ exports.selectAllArticles = () => {
     return rows;
   });
 };
+
+exports.selectCommentsById = (id) => {
+  let sqlString = `
+    SELECT * FROM comments
+    WHERE comments.article_id = $1
+    ORDER BY created_at DESC;
+    `;
+  return db.query(sqlString, [id]).then(({ rows }) => {
+    return rows;
+  });
+};
