@@ -40,7 +40,22 @@ exports.selectCommentsById = (id) => {
     WHERE comments.article_id = $1
     ORDER BY created_at DESC;
     `;
-  return db.query(sqlString, [id]).then(({ rows }) => {
-    return rows;
+
+  let sqlString2 = `
+
+  SELECT 1 FROM articles WHERE article_id = $1
+    `;
+
+  return db.query(sqlString2, [id]).then((result) => {
+    if (result.rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        message: `article with id: ${id} does not exist`,
+      });
+    } else {
+      return db.query(sqlString, [id]).then(({ rows }) => {
+        return rows;
+      });
+    }
   });
 };
