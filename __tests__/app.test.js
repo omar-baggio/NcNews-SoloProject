@@ -166,3 +166,15 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("ERROR: POST /api/articles/:article_id/comments", () => {
+  test("400: responds with an error message when passed a bad request", () => {
+    const article_id = "invalid_type";
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("input is not valid");
+      });
+  });
+});
