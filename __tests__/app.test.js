@@ -111,12 +111,12 @@ describe("GET /api/articles", () => {
     return request(app)
       .get(`/api/articles`)
       .expect(200)
-      .then(({ body }) => {
-        expect(body).toBeInstanceOf(Array);
-        expect(body).toBeSortedBy("created_at", {
-          descending: true,
-        });
-        body.forEach((article) => {
+
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeInstanceOf(Array);
+        expect(articles).toBeSorted({ descending: true });
+        articles.forEach((article) => {
+
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("title", expect.any(String));
           expect(article).toHaveProperty("topic", expect.any(String));
@@ -126,6 +126,60 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("article_img_url", expect.any(String));
           expect(article).toHaveProperty("comment_count", expect.any(Number));
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("status: 200, should responds with array of comments for a given article", () => {
+    return request(app)
+      .get(`/api/articles/1/comments`)
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeInstanceOf(Array);
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id", expect.any(Number));
+          expect(comment).toHaveProperty("votes", expect.any(Number));
+          expect(comment).toHaveProperty("created_at", expect.any(String));
+          expect(comment).toHaveProperty("author", expect.any(String));
+          expect(comment).toHaveProperty("body", expect.any(String));
+          expect(comment).toHaveProperty("article_id", expect.any(Number));
+          expect(comments).toBeSorted({ descending: true });
+        });
+      });
+  });
+
+  test("200: responds with a empty comment array when article exists but no comment posted", () => {
+    const article_id = 2;
+
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeInstanceOf(Object);
+        expect(comments).toEqual([]);
+        expect(comments).toHaveLength(0);
+      });
+  });
+});
+describe("ERROR:GET /api/articles/:article_id/comments", () => {
+  test("400: responds with an error message when passed a bad request", () => {
+    const article_id = "invalid_type";
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("input is not valid");
+      });
+  });
+
+  test("404: responds with an error message when passed a valid endpoint with correct data but does not exist", () => {
+    const article_id = 9999;
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe(`article with id: ${article_id} does not exist`);
       });
   });
 });
