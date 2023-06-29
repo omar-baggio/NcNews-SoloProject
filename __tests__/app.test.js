@@ -90,18 +90,18 @@ describe("ERROR: GET /api/articles/:article_id", () => {
     return request(app)
       .get(`/api/articles/${article_id}`)
       .expect(400)
-      .then(({ body: { message } }) => {
-        expect(message).toBe("input is not valid");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
       });
   });
 
   test("404: responds with an error message when passed a valid endpoint with correct data but does not exist", () => {
-    const article_id = 999;
+    const article_id = 9999;
     return request(app)
       .get(`/api/articles/${article_id}`)
       .expect(404)
-      .then(({ body: { message } }) => {
-        expect(message).toBe(`article with id: ${article_id} does not exist`);
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe(`Not Found`);
       });
   });
 });
@@ -162,14 +162,15 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
 describe("ERROR:GET /api/articles/:article_id/comments", () => {
   test("400: responds with an error message when passed a bad request", () => {
     const article_id = "invalid_type";
     return request(app)
       .get(`/api/articles/${article_id}/comments`)
       .expect(400)
-      .then(({ body: { message } }) => {
-        expect(message).toBe("input is not valid");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
       });
   });
 
@@ -178,8 +179,8 @@ describe("ERROR:GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get(`/api/articles/${article_id}/comments`)
       .expect(404)
-      .then(({ body: { message } }) => {
-        expect(message).toBe(`article with id: ${article_id} does not exist`);
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe(`Not Found`);
       });
   });
 });
