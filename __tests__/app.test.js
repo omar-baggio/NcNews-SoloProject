@@ -116,7 +116,6 @@ describe("GET /api/articles", () => {
         expect(body).toBeSortedBy("created_at", {
           descending: true,
         });
-        console.log(body);
         body.forEach((article) => {
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("title", expect.any(String));
