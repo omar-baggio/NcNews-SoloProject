@@ -8,6 +8,7 @@ const {
   getCommentsById,
   postCommentsById,
 } = require("./controller/articles.controller");
+const { psqlErrors, customErrors, internalServerError } = require("./errors");
 
 const app = express();
 
@@ -25,20 +26,22 @@ app.all("/*", (req, res, next) =>
   res.status(404).send({ message: "page not found" })
 );
 
-app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
-    res.status(400).send({ message: "input is not valid" });
-  } else {
-    next(err);
-  }
-});
+// POSTGRESS ERRORS
 
-app.use((err, req, res, next) => {
-  if (err.status) {
-    res.status(err.status).send({ message: err.message });
-  } else {
-    next(err);
-  }
+app.use(psqlErrors);
+
+// CUSTOM ERRORS
+
+app.use(customErrors);
+
+// INTERNAL SERVER ERROR
+
+app.use(internalServerError);
+
+// PATH NOT FOUND ERROR
+
+app.use((req, res) => {
+  res.status(404).send({ msg: "Not Found" });
 });
 
 module.exports = app;

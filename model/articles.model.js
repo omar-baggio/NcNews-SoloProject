@@ -12,7 +12,7 @@ exports.selectArticleById = (article_id) => {
       if (!rows.length) {
         return Promise.reject({
           status: 404,
-          message: `article with id: ${article_id} does not exist`,
+          msg: `Not Found`,
         });
       }
       return rows[0];
@@ -35,25 +35,25 @@ exports.selectAllArticles = () => {
 };
 
 exports.selectCommentsById = (id) => {
-  let sqlString = `
+  let sqlStringForArticleByID = `
+    SELECT * FROM articles
+    WHERE article_id = $1
+    `;
+
+  let sqlStringForComments = `
     SELECT * FROM comments
     WHERE comments.article_id = $1
     ORDER BY created_at DESC;
     `;
 
-  let sqlString2 = `
-
-  SELECT 1 FROM articles WHERE article_id = $1
-    `;
-
-  return db.query(sqlString2, [id]).then((result) => {
-    if (result.rows.length === 0) {
+  return db.query(sqlStringForArticleByID, [id]).then(({ rows }) => {
+    if (!rows.length) {
       return Promise.reject({
         status: 404,
-        message: `article with id: ${id} does not exist`,
+        msg: "Not Found",
       });
     } else {
-      return db.query(sqlString, [id]).then(({ rows }) => {
+      return db.query(sqlStringForComments, [id]).then(({ rows }) => {
         return rows;
       });
     }
