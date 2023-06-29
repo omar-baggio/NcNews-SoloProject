@@ -116,7 +116,6 @@ describe("GET /api/articles", () => {
         expect(articles).toBeInstanceOf(Array);
         expect(articles).toBeSorted({ descending: true });
         articles.forEach((article) => {
-
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("title", expect.any(String));
           expect(article).toHaveProperty("topic", expect.any(String));
@@ -181,6 +180,38 @@ describe("ERROR:GET /api/articles/:article_id/comments", () => {
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe(`Not Found`);
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: should add a new comment to the comments", () => {
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .expect(201)
+      .send({
+        username: "butter_bridge",
+        body: "This is awesome!",
+      })
+      .then(({ body: { comment } }) => {
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+        expect(comment).toHaveProperty("body", expect.any(String));
+        expect(comment).toHaveProperty("article_id", expect.any(Number));
+        expect(comment).toHaveProperty("author", expect.any(String));
+        expect(comment).toHaveProperty("votes", expect.any(Number));
+        expect(comment).toHaveProperty("created_at", expect.any(String));
+      });
+  });
+});
+
+describe("ERROR: POST /api/articles/:article_id/comments", () => {
+  test("400: responds with an error message when passed a bad request", () => {
+    const article_id = "invalid_type";
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
       });
   });
 });

@@ -12,6 +12,8 @@ const { psqlErrors, customErrors, internalServerError } = require("./errors");
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api", getApi);
@@ -21,6 +23,8 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsById);
+
+app.post("/api/articles/:article_id/comments", postCommentsById);
 
 app.all("/*", (req, res, next) =>
   res.status(404).send({ message: "page not found" })
