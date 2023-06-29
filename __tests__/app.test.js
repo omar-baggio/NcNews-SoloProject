@@ -111,10 +111,12 @@ describe("GET /api/articles", () => {
     return request(app)
       .get(`/api/articles`)
       .expect(200)
+
       .then(({ body: { articles } }) => {
         expect(articles).toBeInstanceOf(Array);
         expect(articles).toBeSorted({ descending: true });
         articles.forEach((article) => {
+
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("title", expect.any(String));
           expect(article).toHaveProperty("topic", expect.any(String));
