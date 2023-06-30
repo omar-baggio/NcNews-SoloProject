@@ -2,6 +2,7 @@ const express = require("express");
 const request = require("./db/connection");
 const { getAllTopics } = require("./controller/topics.controller");
 const { getApi } = require("./controller/api.controller");
+const { deleteComment } = require("./controller/comments.controller");
 const {
   getArticleById,
   getAllArticles,
@@ -28,6 +29,8 @@ app.get("/api/articles/:article_id/comments", getCommentsById);
 app.post("/api/articles/:article_id/comments", postCommentsById);
 
 app.patch("/api/articles/:article_id", updateArticleById);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("/*", (req, res, next) =>
   res.status(404).send({ message: "page not found" })
