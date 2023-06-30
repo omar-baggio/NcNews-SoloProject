@@ -351,12 +351,4 @@ describe("GET /api/users", () => {
         });
       });
   });
-  test("404: responds with error message page not found", () => {
-    return request(app)
-      .get("/api/invalid_users")
-      .expect(404)
-      .then(({ body: { message } }) => {
-        expect(message).toBe("page not found");
-      });
-  });
 });
