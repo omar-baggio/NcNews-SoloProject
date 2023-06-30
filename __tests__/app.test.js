@@ -219,7 +219,7 @@ describe("ERROR: POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post(`/api/articles/32435/comments`)
       .send({
-        username: "chabalaza",
+        username: "icellusedkars",
         body: "This is maafi!",
       })
       .expect(404)
