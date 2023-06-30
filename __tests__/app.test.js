@@ -331,3 +331,32 @@ describe("ERROR: DELETE /api/comments/:comment_id ", () => {
       return request(app).delete(`/api/comments/${comment_id}`).expect(404);
     });
 });
+
+describe("GET /api/users", () => {
+  test("status: 200, should respond with user array of objects ", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toHaveLength(4);
+        expect(users).toBeInstanceOf(Array);
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("404: responds with error message page not found", () => {
+    return request(app)
+      .get("/api/invalid_users")
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("page not found");
+      });
+  });
+});

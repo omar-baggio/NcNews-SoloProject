@@ -3,6 +3,7 @@ const request = require("./db/connection");
 const { getAllTopics } = require("./controller/topics.controller");
 const { getApi } = require("./controller/api.controller");
 const { deleteComment } = require("./controller/comments.controller");
+const { getAllUsers } = require("./controller/users.controller");
 const {
   getArticleById,
   getAllArticles,
@@ -23,6 +24,8 @@ app.get("/api", getApi);
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/users", getAllUsers);
 
 app.get("/api/articles/:article_id/comments", getCommentsById);
 
