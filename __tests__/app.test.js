@@ -262,7 +262,6 @@ describe("Patch /api/articles/:article_id", () => {
         inc_votes: 10,
       })
       .then(({ body: { article } }) => {
-        console.log(article);
         expect(article.votes).toBe(110);
       });
   });
