@@ -76,7 +76,6 @@ exports.addCommentsById = ({ username, body }, id) => {
 };
 
 exports.changeArticleById = (id, { inc_votes }) => {
-  console.log(inc_votes);
   let sqlString = `
   UPDATE articles
   SET votes = votes + $1
