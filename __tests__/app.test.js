@@ -262,7 +262,21 @@ describe("Patch /api/articles/:article_id", () => {
         inc_votes: 10,
       })
       .then(({ body: { article } }) => {
+        console.log(article);
         expect(article.votes).toBe(110);
+      });
+  });
+  test("201: should respond with the updated article, ignoring additional properties", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .expect(201)
+      .send({
+        inc_votes: 10,
+        body: "This is quite hard",
+      })
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(110);
+        expect(article.body).toBe("I find this existence challenging");
       });
   });
 });
@@ -273,6 +287,16 @@ describe("ERROR: Patch /api/articles/:article_id", () => {
     return request(app)
       .patch(`/api/articles/${article_id}`)
       .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: responds with an error message post body is missing property", () => {
+    const article_id = "invalid_type";
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .expect(400)
+      .send({ body: "this is interesting" })
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Bad Request");
       });
