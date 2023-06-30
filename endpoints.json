@@ -32,14 +32,70 @@
     "exampleResponse": {
       "article": {
         "article_id": 3,
-            "title": "Eight pug gifs that remind me of mitch",
-            "topic": "mitch",
-            "author": "icellusedkars",
-            "body": "some gifs",
-            "created_at": 1604394720000,
-            "article_img_url":
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-            "votes": 0
+        "title": "Eight pug gifs that remind me of mitch",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "some gifs",
+        "created_at": 1604394720000,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "votes": 0
+      }
+    }
+  },
+
+  "GET /api/articles/:article_id/comments": {
+    "description": "Serves an array articles by article_id.",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "body": "Ambidextrous marsupial",
+        "votes": 0,
+        "author": "icellusedkars",
+        "created_at": 1600560600000
+      }
+    }
+  },
+
+  "POST /api/articles/:article_id/comments": {
+    "description": "Serves an array articles by article_id.",
+    "queries": [],
+    "Request Body Guide": {
+      "format": "an object containing the correct body information - { username: a valid username in the database in the form of a string, body: a paragraph of the comment in the form of a string}.",
+      "example": {
+        "username": "butter_bridge",
+        "body": "This is awesome!."
+      }
+    },
+    "exampleResponse": {
+      "article": {
+        "body": "This is awesome!",
+        "votes": 0,
+        "author": "butter_bridge",
+        "article_id": 1,
+        "created_at": 1604113380000
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Serves an array articles by article_id.",
+    "queries": [],
+    "Request Body Guide": {
+      "format": "an object containing the updated article - { inc_votes: the value it will increment or decrement by.",
+      "example": {
+        "inc_votes": 10
+      }
+    },
+    "exampleResponse": {
+      "article":  {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 110,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
   },
