@@ -74,3 +74,23 @@ exports.addCommentsById = ({ username, body }, id) => {
       return comment;
     });
 };
+
+exports.changeArticleById = (id, { inc_votes }) => {
+  let sqlString = `
+  UPDATE articles
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;
+  `;
+  let sqlValues = [inc_votes, id];
+  return db.query(sqlString, sqlValues).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({
+        status: 404,
+        msg: "Not Found",
+      });
+    } else {
+      return rows[0];
+    }
+  });
+};
