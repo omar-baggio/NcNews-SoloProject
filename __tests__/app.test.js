@@ -214,4 +214,41 @@ describe("ERROR: POST /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Bad Request");
       });
   });
+
+  test("404: responds with an error message when we try to post a comment to an article that doesn't exist", () => {
+    return request(app)
+      .post(`/api/articles/32435/comments`)
+      .send({
+        username: "chabalaza",
+        body: "This is maafi!",
+      })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not Found");
+      });
+  });
+
+  test("400: Missing a field when posting a comment", () => {
+    const article_id = 2;
+
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send({ body: "This is a test comment." })
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("404: username doesnt exist when posting a comment", () => {
+    const article_id = 2;
+
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send({ username: "user doesnt exists", body: "This is awesome!" })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not Found");
+      });
+  });
 });
