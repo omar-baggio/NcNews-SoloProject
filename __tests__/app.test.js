@@ -314,3 +314,20 @@ describe("ERROR: Patch /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("Delete /api/comments/:comment_id", () => {
+  test("204: should respond with the deleted comment", () => {
+    return request(app).delete(`/api/comments/2`).expect(204);
+  });
+});
+
+describe("ERROR: DELETE /api/comments/:comment_id ", () => {
+  test("400: responds with an error message when passed a bad request", () => {
+    const comment_id = "invalid_type";
+    return request(app).delete(`/api/comments/${comment_id}`).expect(400);
+  }),
+    test("404: responds with valid comment but no resoure found", () => {
+      const comment_id = 9999;
+      return request(app).delete(`/api/comments/${comment_id}`).expect(404);
+    });
+});
