@@ -36,3 +36,16 @@ exports.getCommentsById = (req, res, next) => {
       next(err);
     });
 };
+
+exports.postCommentsById = (req, res, next) => {
+  const postBody = req.body;
+  const { article_id } = req.params;
+
+  addCommentsById(postBody, article_id)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};

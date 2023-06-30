@@ -59,3 +59,18 @@ exports.selectCommentsById = (id) => {
     }
   });
 };
+
+exports.addCommentsById = ({ username, body }, id) => {
+  let sqlString = `
+  INSERT INTO comments
+  (author, body, article_id)
+  VALUES ($1, $2, $3)
+  RETURNING *
+  `;
+
+  return db
+    .query(sqlString, [username, body, id])
+    .then(({ rows: [comment] }) => {
+      return comment;
+    });
+};
