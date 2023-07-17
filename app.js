@@ -12,8 +12,11 @@ const {
   updateArticleById,
 } = require("./controller/articles.controller");
 const { psqlErrors, customErrors, internalServerError } = require("./errors");
+const cors = require("cors");
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
